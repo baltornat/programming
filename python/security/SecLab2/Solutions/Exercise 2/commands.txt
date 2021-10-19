@@ -1,0 +1,5 @@
+#COMMAND TO GENERATE A FULL PAIR OF KEYS (2048 BIT)
+gpg --full-gen-key
+
+#COMMAND TO EXPORT THE PUBLIC KEY TO A FILE
+gpg --armor --export marco.cesana@studenti.unimi.it > mykey.asc

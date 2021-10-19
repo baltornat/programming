@@ -1,0 +1,22 @@
+     1                                  segment .text
+     2                                  global main
+     3                                  extern printf, exit		; libreria printf
+     4                                  
+     5                                  main:	
+     6 00000000 B818000000              	mov eax, 24
+     7 00000005 83C02A                  	add eax, 42
+     8 00000008 A3[00000000]            	mov [x], eax
+     9                                  
+    10 0000000D FF35[00000000]          	push dword [x]
+    11 00000013 68[00000000]            	push fmt
+    12 00000018 E8(00000000)            	call printf
+    13                                  
+    14 0000001D 6A00                    	push 0
+    15 0000001F E8(00000000)            	call exit
+    16                                  
+    17                                  segment .data
+    18 00000000 00000000                x: dd 0
+    19                                  
+    20                                  segment .rodata
+    21 00000000 526973756C7461746F-     fmt: db 'Risultato: %d',10,0 
+    21 00000009 3A2025640A00       

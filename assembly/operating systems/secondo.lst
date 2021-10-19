@@ -1,0 +1,17 @@
+     1                                  segment .text
+     2                                  global main
+     3                                  
+     4                                  main:
+     5 00000000 B9[00000000]            	mov ecx, msg		; stringa
+     6 00000005 BA12000000              	mov edx, msg_size	; dimensione stringa
+     7 0000000A BB01000000              	mov ebx, 1		; file descriptor (stdout)
+     8 0000000F B804000000              	mov eax, 4		; syscall 4 (write)
+     9 00000014 CD80                    	int 0x80
+    10                                  
+    11 00000016 B801000000              	mov eax, 1		; syscall 1 (exit)
+    12 0000001B CD80                    	int 0x80
+    13                                  
+    14                                  segment .rodata
+    15 00000000 4369616F20736F6C61-     msg: db 'Ciao solabbisti!',10,0
+    15 00000009 626269737469210A00 
+    16                                  msg_size equ $ - msg

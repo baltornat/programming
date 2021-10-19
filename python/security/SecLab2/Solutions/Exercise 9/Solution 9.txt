@@ -1,0 +1,5 @@
+Downloaded hash file 'bfield.hash' (MD5 password cracked from a famous online videogame)
+Password list: rockyou.txt, already present in Kali Linux
+
+#COMMAND
+sudo john --format=Raw-MD5 --wordlist:rockyou.txt bfield.hash

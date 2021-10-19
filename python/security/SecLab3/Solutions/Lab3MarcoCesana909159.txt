@@ -1,0 +1,142 @@
+#EXERCISE #1: PERMISSIONS
+
+1)  mkdir permissions
+    touch permissions/file
+    cp /etc/passwd /home/marco/permissions
+    ls -la permissions
+    
+    total 12
+    drwxr-xr-x  2 marco marco 4096 22 apr 15.37 .
+    drwx------ 27 marco marco 4096 22 apr 15.37 ..
+    -rw-r--r--  1 marco marco    0 22 apr 15.37 file
+    -rw-r--r--  1 marco marco 1897 22 apr 15.37 passwd
+
+2)  sudo touch permissions/file2
+   
+    (base) [marco@evelina ~]$ ls -la permissions/
+    total 12
+    drwxr-xr-x  2 marco marco 4096 22 apr 15.41 .
+    drwx------ 27 marco marco 4096 22 apr 15.37 ..
+    -rw-r--r--  1 marco marco    0 22 apr 15.37 file
+    -rw-r--r--  1 root  root     0 22 apr 15.41 file2
+    -rw-r--r--  1 marco marco 1897 22 apr 15.37 passwd
+
+3)  sudo chown marco permissions/*
+
+4)  (base) [marco@evelina ~]$ ls -la permissions/
+    total 12
+    drwxr-xr-x  2 marco marco 4096 22 apr 15.41 .
+    drwx------ 27 marco marco 4096 22 apr 15.37 ..
+    -rw-r--r--  1 marco marco    0 22 apr 15.37 file
+    -rw-r--r--  1 marco root     0 22 apr 15.41 file2
+    -rw-r--r--  1 marco marco 1897 22 apr 15.37 passwd
+
+5)  chmod 770 is rwxrwx---
+
+6)  chmod 664 is rw-rw-r-- and not r-xr-xr--
+
+7)  chmod 400 is r--------
+
+8)  chmod 734 is rwx-wxr-- and not rwxr-xr--
+
+9)  (base) [marco@evelina ~]$ umask
+    0022
+    
+    (base) [marco@evelina ~]$ umask -S
+    u=rwx,g=rx,o=rx
+
+10) umask u=,g=rwx,o=rwx
+    
+        (base) [marco@evelina ~]$ umask -S
+        u=,g=rwx,o=rwx
+        
+11) sudo touch permissions/file3
+    sudo chmod 004 permissions/file3
+    
+    Yes, as a normal user I can read the content of the file
+    
+    I can't write to this file
+
+12) touch permissions/file4
+    chmod 004 permissions/file4
+    
+    Yes, another normal user can read this file
+    
+    No, I can't write to this file
+    
+13) sudo nano permissions/file4
+
+    Root can read and write this file
+    
+14) groupadd test
+    mkdir permissions/test
+    chown root:test permissions/test
+    chmod 770 permissions/test
+    chmod 2770 permissions/test
+    chmod +t permissions/test
+    
+#EXERCISE #2: STICKY BIT, GID AND UID
+
+1)  groupadd students
+    mkdir permissions/students
+    chown root:test permissions/students
+
+2)  chmod 770 permissions/students
+
+3)  chmod 2770 permissions/students
+
+4)  chmod +t permissions/students
+
+5)  ls -l /usr/bin/passwd 
+    -rwsr-xr-x 1 root root 63640  4 feb 13.31 /usr/bin/passwd
+    chmod 755 /usr/bin/passwd 
+    
+    ls -l /usr/bin/passwd 
+    -rwxr-xr-x 1 root root 63640  4 feb 13.31 /usr/bin/passwd
+    
+#EXERCISE #3: USERS AND GROUPS
+
+1)  groups marco
+    wheel lp sys network power marco
+    
+2)  groupadd school
+    useradd -g school George
+    
+3)  touch homework.txt
+    getfacl homework.txt 
+    # file: homework.txt
+    # owner: marco
+    # group: marco
+    user::rw-
+    group::r--
+    other::r--
+
+4)  setfacl -m u:George:7 homework.txt
+    setfacl -m g:school:6 homework.txt
+    getfacl homework.txt
+    
+5)  setfacl -x George homework.txt
+
+#EXERCISE #4: LINKS
+
+1)  touch poem.txt
+    touch tale.txt
+    nano poem.txt
+    nano tale.txt
+
+2)  ln poem.txt hlpoem.txt
+
+3)  ls -li poem.txt tale.txt hlpoem.txt
+    1579509 -rw-r--r-- 2 marco marco 5 24 apr 14.38 hlpoem.txt
+    1579509 -rw-r--r-- 2 marco marco 5 24 apr 14.38 poem.txt
+    1580216 -rw-r--r-- 1 marco marco 4 24 apr 14.38 tale.txt
+
+
+4)  find . -inum 1579509
+
+5)  The content is stored somewhere on the disk
+    The name of the file is stored in a directory
+    
+6)  ln -s tale.txt sltale.txt
+
+7)  It tells me that there's the file with inode 2 that is hard linked

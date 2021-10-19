@@ -1,0 +1,10 @@
+#EXERCISE 5
+
+I send my public key to Bob.
+
+Bob encrypts my public key with its private key and sends it back to me
+
+I decrypt my encrypted public key with Bob's public key
+
+The only way to be sure that someone didn't fake the signing process is that a 
+CA (Certification Authority), has proved that Bob really owns his public key

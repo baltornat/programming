@@ -1,0 +1,7 @@
+Just because the page shows all the comments loaded by the users, it can be possibile
+for an attacker to try an XSS Stored attack.
+
+<script>alert(document.cookie)</script>
+
+The above command will prompt a text box with session ID every time a user load the 
+content of this webpage.

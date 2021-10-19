@@ -1,0 +1,21 @@
+#COMMAND TO CRACK 'passwd' WITH SINGLE CRACKING
+sudo john --single passwd
+
+#OUTPUT
+Using default input encoding: UTF-8
+Loaded 4 password hashes with 4 different salts (sha512crypt, crypt(3) $6$ [SHA512 256/256 AVX2 4x])
+Cost 1 (iteration count) is 5000 for all loaded hashes
+Will run 4 OpenMP threads
+Press 'q' or Ctrl-C to abort, almost any other key for status
+Warning: Only 15 candidates buffered for the current salt, minimum 16 needed for performance.
+Warning: Only 9 candidates buffered for the current salt, minimum 16 needed for performance.
+Warning: Only 8 candidates buffered for the current salt, minimum 16 needed for performance.
+doejohn7         (john)
+Millera          (madam)
+Warning: Only 14 candidates buffered for the current salt, minimum 16 needed for performance.
+tom23            (tom)
+white123         (alfred)
+4g 0:00:00:02 DONE (2020-04-15 12:00) 1.680g/s 5105p/s 5107c/s 5107C/s alfredalfred123..alfred000
+Use the "--show" option to display all of the cracked passwords reliably
+Session completed
+

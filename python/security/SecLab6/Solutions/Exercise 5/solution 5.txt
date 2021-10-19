@@ -1,0 +1,40 @@
+This is the code:
+
+<?php    
+
+if(isset($_GET['Submit'])){
+    
+    // Retrieve data
+    
+    $id = $_GET['id'];
+
+    $getid = "SELECT first_name, last_name FROM users WHERE user_id = '$id'";
+    $result = mysql_query($getid) or die('<pre>' . mysql_error() . '</pre>' );
+
+    $num = mysql_numrows($result);
+
+    $i = 0;
+
+    while ($i < $num) {
+
+        $first = mysql_result($result,$i,"first_name");
+        $last = mysql_result($result,$i,"last_name");
+        
+        echo '<pre>';
+        echo 'ID: ' . $id . '<br>First name: ' . $first . '<br>Surname: ' . $last;
+        echo '</pre>';
+
+        $i++;
+    }
+}
+?>
+
+We can see from this code snippet that the variable $id is vulnerable to SQL injection
+because the input isn't checked to avoid (for example) quotes ' or double quotes ".
+This vulnerability can lead to change the query statement in a manner that the attacker
+can retrieve all the informations he wants from the database.
+The programmer must check the given input for example in this way:
+
+$id = $_GET['id'];
+$id = stripslashes($id);
+$id = mysql_real_escape_string($id);

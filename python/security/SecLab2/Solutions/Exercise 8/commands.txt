@@ -1,0 +1,10 @@
+#COMMAND TO CRACK PASSWORDS IN 'passwd' COMPOSED BY LOWERCASE LETTERS
+sudo john --incremental=Lower passwd
+
+#COMMAND TO CRACK PASSWORDS IN 'passwd' COMPOSED BY DIGITS
+sudo john --incremental=Digits passwd
+
+#PASSWORDS
+sevys	(Willy)
+56820	(Ray)
+744510	(andrew)

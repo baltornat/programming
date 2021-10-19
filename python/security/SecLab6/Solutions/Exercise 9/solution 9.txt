@@ -1,0 +1,8 @@
+With security set to Medium, there is some input sanitization, but only on the Message box.
+On the Name's box there is only a check for the string <script> but not for <Script>.
+Name seems to be attackable but unfortunatly the max length of the input is just 10 chars.
+We can right-click Name's box and increment max-length to 100 and try the following command:
+
+<Script>alert(document.cookie)</Script>
+
+With the command above we injected the code successfully.

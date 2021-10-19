@@ -1,0 +1,15 @@
+#COMMAND TO CRACK 'passwd' WITH DICTIONARY ATTACK
+sudo john --wordlist:password.lst passwd 
+
+#OUTPUT
+Using default input encoding: UTF-8
+Loaded 4 password hashes with 4 different salts (sha512crypt, crypt(3) $6$ [SHA512 256/256 AVX2 4x])
+Cost 1 (iteration count) is 5000 for all loaded hashes
+Will run 4 OpenMP threads
+Press 'q' or Ctrl-C to abort, almost any other key for status
+dark1            (Admin)
+tech             (bob)
+2g 0:00:00:02 DONE (2020-04-15 12:11) 0.8064g/s 1429p/s 5528c/s 5528C/s modem..sss
+Use the "--show" option to display all of the cracked passwords reliably
+Session completed
+

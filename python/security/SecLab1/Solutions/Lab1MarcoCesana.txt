@@ -1,0 +1,358 @@
+Marco Cesana 909159
+
+Eseguire i file con python3 nome_file
+___________________
+Exercise #1: Base64
+
+ciphertext = "VGhpcyBpcyBiYXNlNjQgZW5jb2RpbmcsIGlzIG5vdCBhIGNoaXBlciBidXQgb25seSBhIHdheSB0byByZXByZXNlbnQgYmluYXJ5IGRhdGEgaW4gYW4gQVNDSUkgc3RyaW5nLg=="
+
+print("Ciphertext: " + ciphertext + '\n')
+
+conversion_table = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
+                    'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X',
+                    'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j',
+                    'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v',
+                    'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7',
+                    '8', '9', '+', '/']
+
+text = ""
+
+for ch in ciphertext:                                                           #For each character in the ciphertext
+    if ch == '=':
+        text = text + "00"
+    else:
+        decimal_value = conversion_table.index(ch)                              #Returns the index of the character from the conversion table
+        binary_value = bin(decimal_value)[2:]                                   #Returns the binary conversion of the decimal value
+        while len(binary_value) != 6:               
+            binary_value = '0' + binary_value                                   #Add 0 at the head as long as the length of the set of bits is != 6
+        text = text + binary_value
+        
+n = int(text, 2)                                                                #Returns an integer object from a string; second parameter is the base of the string                       
+print("Plaintext: " + n.to_bytes((n.bit_length() + 7) // 8, 'big').decode())    #Print the convertion from Byte to ASCII for each byte of the set of bits 
+
+###OUTPUT: This is base64 encoding, is not a chiper but only a way to represent binary data in an ASCII string.
+
+
+
+
+__________________________
+Exercise #2: Stream Cipher
+
+file = open("../02_stream_chiper/crypt.txt", "r")   #Read the ciphertext
+if file.mode == 'r':
+    ciphertext = file.read()
+file.close()
+
+file = open("../02_stream_chiper/key.txt", "r")     #Read the key
+if file.mode == 'r':
+    key = file.read()
+file.close()
+    
+print("Key: " + key + '\n')
+print("Ciphertext: " + ciphertext + '\n')
+
+"""
+Returns the binary convertion of text
+ -ord() -> returns decimal value of the character received by input
+ -bin() -> returns binary convertion of the integer received by input
+"""
+def convert_to_binary(text):
+    binary_text = ""
+    for ch in text:
+        binary = bin(ord(ch))[2:]
+        while len(binary) != 8:                                                 #If the length of the set of bits is != 8 add zeroes 
+            binary = '0' + binary 
+        binary_text = binary_text + binary    
+    binary_text = "0b" + binary_text 
+    return binary_text
+
+binary_ciphertext = convert_to_binary(ciphertext)
+binary_key = convert_to_binary(key)
+
+n = (int(binary_ciphertext, 2) ^ int(binary_key, 2))                            #Do the bitwise XOR between the ciphertext and the key
+
+print("Plaintext: " + n.to_bytes((n.bit_length() + 7) // 8, 'big').decode())    #Print the convertion from Byte to ASCII for each byte of the set of bits
+
+###OUTPUT: Very good, you're able to decrypt a fixed _OR! One of the first basic stream chiper.
+
+
+
+
+________________________________
+Exercise #3: Substitution Cipher
+
+file = open("../03_monoalphabetic_chiper/ciphertext.txt", "r")                  #Read the ciphertext
+if file.mode == 'r':
+    ciphertext = file.read()
+file.close()
+
+print("Ciphertext: ")
+print(ciphertext)
+
+counts = {}
+for ch in ciphertext:                                                           #Frequence
+    if ch != ' ' and ch != '\n' and ch != ',' and ch != ';':                    #Exclude ' ', '\n', ',', ';'
+        if ch in counts:
+            counts[ch] += 1
+        else:
+            counts[ch] = 1
+
+print("Frequences: ")           
+print(counts)
+
+plaintext = ""
+for ch in ciphertext:
+    if ch == 'j':
+        plaintext = plaintext + 'A'
+    elif ch == 'n':
+        plaintext = plaintext + 'E'
+    elif ch == 'r':
+        plaintext = plaintext + 'I'
+    elif ch == 'u':
+        plaintext = plaintext + 'L'
+    elif ch == 'd':
+        plaintext = plaintext + 'R'
+    elif ch == 'b':
+        plaintext = plaintext + 'P'
+    elif ch == 'f':
+        plaintext = plaintext + 'T'
+    elif ch == 'k':
+        plaintext = plaintext + 'B'   
+    elif ch == 'g':
+        plaintext = plaintext + 'U'
+    elif ch == 'l':
+        plaintext = plaintext + 'C'
+    elif ch == 'm':
+        plaintext = plaintext + 'D'
+    elif ch == 'a':
+        plaintext = plaintext + 'S'
+    elif ch == 'e':
+        plaintext = plaintext + 'O'
+    elif ch == 'z':
+        plaintext = plaintext + 'N'
+    elif ch == 'i':
+        plaintext = plaintext + 'Z'
+    elif ch == 'h':
+        plaintext = plaintext + 'V'
+    elif ch == 'v':
+        plaintext = plaintext + 'M'
+    elif ch == 'p':
+        plaintext = plaintext + 'G'
+    elif ch == 'o':
+        plaintext = plaintext + 'F'
+    elif ch == 'c':
+        plaintext = plaintext + 'Q'
+    elif ch == 'q':
+        plaintext = plaintext + 'H'
+    else:
+        plaintext = plaintext + ch
+
+print("\nPlaintext: ")        
+print(plaintext)
+
+###OUTPUT: Il sabato del villaggio (Leopardi)
+
+
+
+
+_____________________________
+Exercise #4: Integrity Checks
+
+import hashlib as h
+
+#MD5
+
+file = open("../04_integrity_checks/checksum.md5", "r")                  #Read the ciphertext
+if file.mode == 'r':
+    check_md5 = file.read()
+file.close()
+
+with open('../04_integrity_checks/PE_Format_Walkthrough.pdf', 'rb') as f:
+    h1 = h.md5(f.read()).hexdigest()
+    
+if h1 == check_md5:
+    print("MD5: correct")
+else:
+    print("MD5: incorrect")
+
+#SHA1
+
+file = open("../04_integrity_checks/checksum.sha1", "r")                  #Read the ciphertext
+if file.mode == 'r':
+    check_sha1 = file.read()
+file.close()
+
+with open('../04_integrity_checks/PE_Format_Walkthrough.pdf', 'rb') as f:
+    h1 = h.sha1(f.read()).hexdigest()
+if h1 == check_sha1:
+    print("SHA1: correct")
+else:
+    print("SHA1: incorrect")
+    
+#SHA256
+
+file = open("../04_integrity_checks/checksum.sha256", "r")                  #Read the ciphertext
+if file.mode == 'r':
+    check_sha256 = file.read()
+file.close()
+
+with open('../04_integrity_checks/PE_Format_Walkthrough.pdf', 'rb') as f:
+    h1 = h.sha256(f.read()).hexdigest()
+if h1 == check_sha256:
+    print("SHA256: correct")
+else:
+    print("SHA256: incorrect")
+    
+#SHA512
+
+file = open("../04_integrity_checks/checksum.sha512", "r")                  #Read the ciphertext
+if file.mode == 'r':
+    check_sha512 = file.read()
+file.close()
+
+with open('../04_integrity_checks/PE_Format_Walkthrough.pdf', 'rb') as f:
+    h1 = h.sha512(f.read()).hexdigest()
+if h1 == check_sha512:
+    print("SHA512: correct")
+else:
+    print("SHA512: incorrect")
+    
+###OUTPUT: 
+MD5: incorrect
+SHA1: incorrect
+SHA256: incorrect
+SHA512: incorrect
+
+
+
+
+_________________________
+Exercise #5: Hash Forcing
+
+import random
+import hashlib as h
+
+pool = b'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'    #Item pool
+out = ""
+
+while out[:5] != "00000":                                                   #Execute as long as the first 5 characters of the output isn't like 00000xxxxxxxxxxxxxxxx
+    s = bytearray()
+    for i in range(20):                                                     #Execute 20 times because 20*8(bit) = 160 bit (sha1 length)
+        s.append(random.choice(pool))                                       #Choose randomly one character from the pool and put it in the input
+    out = h.sha1(s).hexdigest()                                             #Apply sha1 on the input, repeat if the first 5 characters aren't like 00000xxxxxxxxxxxxxxxx
+print("Value found: ")
+print(out)
+
+###OUTPUT: 4HsgHMz3r9igKxVYrtn2
+
+
+
+
+___________________________
+Exercise #6: Short Password
+
+from functions import try_md5, try_sha1, try_sha224, try_sha256, try_sha384, try_sha512
+
+with open("../06_short_password_cracking/hacked_passwords.txt", "r") as f:
+    count = 1
+    fl = f.readlines()
+    for line in fl:
+        s = line.split(':')[1]
+        value_hash = ''.join(e for e in s if e.isalnum())
+        l = len(value_hash)      
+        if l == 32:
+            print("Trying md5 to crack pwd for user",count,":")
+            print("Password: " + try_md5(value_hash))
+            print('\n')
+        elif l == 40:
+            print("Trying sha1 to crack pwd for user",count,":")
+            print("Password: " + try_sha1(value_hash))
+            print('\n')
+        elif l == 56:
+            print("Trying sha224 to crack pwd for user",count,":")
+            print("Password: " + try_sha224(value_hash))
+            print('\n')
+        elif l == 64:
+            print("Trying sha256 to crack pwd for user",count,":")
+            print("Password: " + try_sha256(value_hash))
+            print('\n')
+        elif l == 96:
+            print("Trying sha384 to crack pwd for user",count,":")
+            print("Password: " + try_sha384(value_hash))
+            print('\n')
+        else:
+            print("Trying sha512 to crack pwd for user",count,":")
+            print("Password: " + try_sha512(value_hash))
+            print('\n')
+        count = count + 1
+        
+import hashlib as h
+import itertools
+
+pool = "abcdefghijklmnopqrstuvwxyz"    #Item pool
+
+def try_md5(value_hash):
+    s = ""
+    out = h.md5(s.encode()).hexdigest()
+    if out == value_hash:
+        return ""
+
+    for item in itertools.product(pool, repeat=1):
+        s = "".join(item)
+        out = h.md5(s.encode()).hexdigest()
+        if out == value_hash:
+            return s
+        else:
+            continue
+    for item in itertools.product(pool, repeat=2):
+        s = "".join(item)
+        out = h.md5(s.encode()).hexdigest()
+        if out == value_hash:
+            return s
+        else:
+            continue
+    for item in itertools.product(pool, repeat=3):
+        s = "".join(item)
+        out = h.md5(s.encode()).hexdigest()
+        if out == value_hash:
+            return s
+        else:
+            continue
+    for item in itertools.product(pool, repeat=4):
+        s = "".join(item)
+        out = h.md5(s.encode()).hexdigest()
+        if out == value_hash:
+            return s
+        else:
+            continue
+    for item in itertools.product(pool, repeat=5):
+        s = "".join(item)
+        out = h.md5(s.encode()).hexdigest()
+        if out == value_hash:
+            return s
+        else:
+            continue
+            
+###THE OTHER FUNCTIONS ARE SIMILAR
+###OUTPUT
+user1: laser
+user2: linux
+user3: bugs
+user4: hack
+user5: apple
+user6: ""
+user7: admin
+user8: locky
+user9: key 
+user10: cyber
+user11: crypt
+user12: print
+user13: macos
+user14: quick
+user15: gate
+user16: phone
+user17: cost
+user18: virus
+user19: pwned
+user20: money
+admin: crack
